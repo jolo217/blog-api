@@ -4,6 +4,7 @@
   "description": "blog-api",
   "main": "\u001b[D\u001b[D\u001b[\u001b[3\u001b[C\u001b[C\u001b[3~\u001b[3~\u001b[3~)\u001b[C\u001b[C",
   "dependencies": {
+    "express": "^4.15.4",
     "uuid": "^3.1.0"
   },
   "devDependencies": {},
