@@ -1,0 +1,24 @@
+{
+  "name": "blog-api",
+  "version": "1.0.0",
+  "description": "blog-api",
+  "main": "\u001b[D\u001b[D\u001b[\u001b[3\u001b[C\u001b[C\u001b[3~\u001b[3~\u001b[3~)\u001b[C\u001b[C",
+  "dependencies": {
+    "uuid": "^3.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jolo217/blog-api.git"
+  },
+  "author": "Jolon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jolo217/blog-api/issues"
+  },
+  "homepage": "https://github.com/jolo217/blog-api#readme"
+}
