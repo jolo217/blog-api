@@ -1,14 +1,95 @@
-const express = require('express');
-const morgan = require('morgan');
+const chai = require('chai');
+const chaiHttp = require('chai-http');
 
-const app = express();
+const {app, runServer, closeServer} = require('../server');
 
-const BlogPostsRouter = require('./BlogPostsRouter');
+const should = chai.should();
 
-app.use(morgan('common'));
+chai.use(chaiHttp);
 
-app.use(express.static('public'));
+describe('Blog Posts', function() {
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html');
+  before(function() {
+    return runServer();
+  });
+
+  after(function() {
+    return closeServer();
+  });
+
+it('should list recipes on GET', function() {
+   	return chai.request(app)
+      .get('/blog-posts')
+      .then(function(res) {
+        res.should.have.status(200);
+        res.should.be.json;
+        res.body.should.be.a('array');
+        res.body.length.should.be.above(0);
+      	res.body.forEach(function(item) {
+          item.should.be.a('object');
+          item.should.include.keys('id', 'title', 'content', 'author', 'publishDate');
+        });
+      });
+  });
+
+it('should add blog post on POST', function() {
+	const newPost = {
+		name: 'Title here',
+		content: 'Content here',
+		author: 'Tom Brady'
+	};
+	const expectedKeys = ['id', 'publishDate'].concat(Object.keys(newPost));
+
+	return chai.request(app)
+		.post('/blog-posts')
+		.send(newPost)
+		.then(function(res) {
+			res.should.have.status(201);
+			res.should.be.json;
+        	res.body.should.be.a('object');
+        	res.body.should.have.all.keys(expectedKeys);
+        	res.body.title.should.equal(newPost.title);
+        	res.body.content.should.equal(newPost.content);
+       	 	res.body.author.should.equal(newPost.author)
+		});
+});
+
+it('should error on POST', function() {
+	const = missingData = {};
+	return chai.request(app)
+		.post('/blog-posts')
+		.send(missingData)
+		.catch(function(res){
+			res.should.have.status(400);
+		});
+});
+
+it('should update blogs on POST', function() {
+	return chai.request(app)
+		.get('blog-posts')
+		.then(function(res) {
+			const updatePost = object.assign(res.body[0], {
+				title: 'Awesome title here',
+				content: 'Awesome content here'
+			});
+			return chai.request(app)
+				.put(`/blog-posts/${res.body[0].id}`)
+				.send(updatePost)
+				.then(function(res) {
+					res.should.have.status(204);
+				});
+		});
+});
+
+it('should delete posts on DELETE', function() {
+	return chai.request(app)
+		.get('blog-posts')
+		.then(function(res) {
+			return chai.request(app)
+				.delete(`/blog-posts/${res.body[0].id}`)
+				.then(function(res) {
+					res.should.have.status(204);
+				});
+		});
+	});
 });
